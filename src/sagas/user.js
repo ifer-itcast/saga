@@ -3,9 +3,14 @@ import axios from "axios";
 import { FETCH_USER, FETCH_JOKER } from "../pages/user/store/actionTypes";
 
 function* fetchUser() {
-    const data1 = yield call(axios.get, "https://autumnfish.cn/api/joke")
-    yield put({ type: "FETCH_USER_SUCCESS", user: data1 })
-    console.log(data1);
+    try {
+        const data1 = yield call(axios.get, "https://autumnfish.cn/api/joke")
+        yield put({ type: "FETCH_USER_SUCCESS", user: data1 })
+        console.log(data1);
+    } catch (e) {
+        // failure
+        yield put({ type: "FETCH_USER_FAILURE", error: e.message })
+    }
 }
 
 function* fetchJoker() {
