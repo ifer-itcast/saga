@@ -1,9 +1,10 @@
-import { takeEvery, call, all } from "redux-saga/effects";
+import { takeEvery, call, all, put } from "redux-saga/effects";
 import axios from "axios";
 import { FETCH_USER, FETCH_JOKER } from "../pages/user/store/actionTypes";
 
 function* fetchUser() {
     const data1 = yield call(axios.get, "https://autumnfish.cn/api/joke")
+    yield put({ type: "FETCH_USER_SUCCESS", user: data1 })
     console.log(data1);
 }
 
