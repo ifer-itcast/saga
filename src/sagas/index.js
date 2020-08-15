@@ -1,15 +1,22 @@
-import { takeEvery, put, delay } from 'redux-saga/effects';
-import { INCREMENT_ASYNC } from '../pages/counter/store/actionTypes';
-import { increment } from '../pages/counter/store/actionCreators';
+import { all, fork } from "redux-saga/effects";
+import {counterSagas} from './couner';
+import {userSagas} from './user';
 
-// const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+export default function* rootSaga() {
+    // 并发，和顺序无关
+    // yield all([
+    //     watchIncrementAsync(),
+    //     watchFetchUser(),
+    //     watchFetchJoker()
+    // ]);
+    // yield all([
+    //     fork(watchIncrementAsync),
+    //     fork(watchFetchUser),
+    //     fork(watchFetchJoker)
+    // ]);
 
-function* incrementAsync() {
-    yield delay(2000);
-    yield put(increment());
-}
-
-export function* watchIncrementAsync() {
-    // ## 监听 action 触发 incrementAsync 函数
-    yield takeEvery(INCREMENT_ASYNC, incrementAsync)
+    yield all([
+        ...counterSagas,
+        ...userSagas
+    ]);
 }
