@@ -1,13 +1,11 @@
-import React, { Component } from 'react';
-
-class App extends Component {
+import React, { Component } from "react";
+import Counter from "./pages/counter";
+export default class App extends Component {
     render() {
         return (
             <div>
-                App
+                <Counter />
             </div>
         );
     }
 }
-
-export default App;
