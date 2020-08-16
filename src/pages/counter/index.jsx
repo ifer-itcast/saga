@@ -8,6 +8,7 @@ class Counter extends Component {
                 <p>
                     {this.props.counter}
                 </p>
+                {/* 这里直接执行的是一个 actionCreator，无需手动进行 dispatch 的操作 */}
                 <button onClick={this.props.incrementAsync}>click</button>
             </div>
         )

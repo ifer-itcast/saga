@@ -1,13 +1,9 @@
-import { INCREMENT } from './actionTypes';
+import { INCREMENT, INCREMENT_ASYNC } from './actionTypes';
 
-const increment = () => ({
+export const increment = () => ({
     type: INCREMENT
 });
 
-export const incrementAsync = () => {
-    return dispatch => {
-        setTimeout(() => {
-            dispatch(increment());
-        }, 1000);
-    }
-};
+export const incrementAsync = () => ({
+    type: INCREMENT_ASYNC
+});
