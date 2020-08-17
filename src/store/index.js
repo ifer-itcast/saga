@@ -6,11 +6,13 @@ import rootSaga from '../sagas';
 // #2 创建
 const sagaMiddleware = createSagaMiddleware();
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const store = createStore(
+// 中间件、createStore、reducer
+const store = composeEnhancers(applyMiddleware(sagaMiddleware))(createStore)(rootReducer);
+/* const store = createStore(
     rootReducer,
     // #3 应用
     composeEnhancers(applyMiddleware(sagaMiddleware))
-);
+); */
 // #4 启用
 sagaMiddleware.run(rootSaga);
 export default store;
