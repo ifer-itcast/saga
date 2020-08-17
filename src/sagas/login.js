@@ -1,4 +1,4 @@
-import { take, call, put, fork } from 'redux-saga/effects';
+import { take, call, put, fork, cancel } from 'redux-saga/effects';
 import { actionTypes as loginActionTypes } from '../pages/login/store';
 import api from '../utils/api';
 
@@ -34,7 +34,10 @@ function* watchLogin() {
         const task = yield fork(login, username, password);
 
         // Bug：先点退出的话下一次就不能再退出了
-        yield take(loginActionTypes.LOGOUT);
+        const action = yield take(loginActionTypes.LOGOUT);
+        if(action.type === loginActionTypes.LOGOUT) {
+            yield cancel(task);
+        }
         yield put({ type: loginActionTypes.LOGOUT_SUCCESS });
     }
 }
