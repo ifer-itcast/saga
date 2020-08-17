@@ -1,15 +1,24 @@
-import { take, call, put, fork, cancel } from 'redux-saga/effects';
+import { take, call, put, fork, cancel, cancelled } from 'redux-saga/effects';
 import { actionTypes as loginActionTypes } from '../pages/login/store';
 import api from '../utils/api';
 
 // worker saga
 function* login(username, password) {
     try {
+        api.setItem('loading', 'true');
+
         const token = yield call(api.login, username, password);
         yield put({ type: loginActionTypes.LOGIN_SUCCESS, payload: token});
+
+        api.setItem('loading', 'false');
     } catch(error) {
         console.log(error);
         yield put({ type: loginActionTypes.LOGIN_FAILED, error });
+        api.setItem('loading', 'false');
+    } finally {
+        if(yield cancelled()) {
+            api.setItem('loading', 'false');
+        }
     }
 }
 

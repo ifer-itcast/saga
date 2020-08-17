@@ -9,5 +9,11 @@ export default {
                 }
             }, 1000);
         });
+    },
+    setItem(key, value) {
+        localStorage.setItem(key, value);
+    },
+    getItem(key) {
+        return localStorage.getItem(key);
     }
 }
