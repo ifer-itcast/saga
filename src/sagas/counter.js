@@ -1,19 +1,26 @@
-import { takeEvery, put, delay } from 'redux-saga/effects';
+import { takeEvery, put, delay, take, select } from 'redux-saga/effects';
 import { increment } from '../pages/counter/store/actionCreators';
 import { INCREMENT_ASYNC } from '../pages/counter/store/actionTypes';
 
 export function* incrementAsync() {
     yield delay(2000);
-    // delay 函数中的 this 就是 o，注意 delay 不能是一个箭头函数
-    // const o = { name: 'ifer' };
-    // yield call([o, delay], 2000);
-    // yield apply(o, delay, [2000]);
     yield put(increment());
 }
 function* watchIncrementAsync() {
-    yield takeEvery(INCREMENT_ASYNC, incrementAsync);
+    while(true) {
+        yield take(INCREMENT_ASYNC);
+        yield incrementAsync();
+    }
+}
+
+function* watchAll() {
+    while(true) {
+        console.log(yield take('*'));
+        console.log(yield select(state => state.counter));
+    }
 }
 
 export const counterSagas = [
-    watchIncrementAsync()
+    watchIncrementAsync(),
+    watchAll()
 ];
