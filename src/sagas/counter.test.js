@@ -1,5 +1,5 @@
 import test from 'tape';
-import { delay, put } from 'redux-saga/effects';
+import { put, call, delay } from 'redux-saga/effects';
 import { incrementAsync } from './counter';
 import { increment } from '../pages/counter/store/actionCreators';
 
