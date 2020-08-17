@@ -1,4 +1,4 @@
-import { take, call, put } from 'redux-saga/effects';
+import { take, call, put, fork } from 'redux-saga/effects';
 import { actionTypes as loginActionTypes } from '../pages/login/store';
 import api from '../utils/api';
 
@@ -6,7 +6,7 @@ import api from '../utils/api';
 function* login(username, password) {
     try {
         const token = yield call(api.login, username, password);
-        return token;
+        yield put({ type: loginActionTypes.LOGIN_SUCCESS, payload: token});
     } catch(error) {
         console.log(error);
         yield put({ type: loginActionTypes.LOGIN_FAILED, error });
@@ -14,7 +14,7 @@ function* login(username, password) {
 }
 
 // watcher saga
-function* watchLogin() {
+/* function* watchLogin() {
     while(true) {
         const { payload: { username, password } } = yield take(loginActionTypes.LOGIN);
         const token = yield call(login, username, password);
@@ -24,6 +24,18 @@ function* watchLogin() {
             yield take(loginActionTypes.LOGOUT);
             yield put({ type: loginActionTypes.LOGOUT_SUCCESS });
         }
+    }
+} */
+function* watchLogin() {
+    while(true) {
+        const { payload: { username, password } } = yield take(loginActionTypes.LOGIN);
+        // 插起来，代码会立刻向下执行
+        // 返回值是一个任务对象，拿不到 login 的返回值
+        const task = yield fork(login, username, password);
+
+        // Bug：先点退出的话下一次就不能再退出了
+        yield take(loginActionTypes.LOGOUT);
+        yield put({ type: loginActionTypes.LOGOUT_SUCCESS });
     }
 }
 
